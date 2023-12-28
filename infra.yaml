@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+    postgres-db:
+        container_name: postgre_db
+        image: postgres:latest
+        environment:
+            POSTGRES_USER: crm
+            POSTGRES_PASSWORD: crm
+        ports:
+            - "5432:5432"
+        volumes:
+            - db:/var/lib/postgresql/data
+
+    userapp:
+        container_name: user_app
+        build:
+            context: ./user
+        environment:
+            DB_SCHEMA: crm # postgres create default database with POSTGRES_USER name , if not created any
+            DB_USER: crm
+            DB_PASSWORD: crm
+            DB_HOST: postgres-db
+            DB_PORT: 5432
+            PORT: 3000
+        depends_on:
+            - postgres-db
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./user:/app
+
+volumes:
+    db:
