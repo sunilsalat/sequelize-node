@@ -1,6 +1,8 @@
+require("express-async-errors");
 import express, { Request, Response, NextFunction } from "express";
 import { loadRoute } from "./routes";
 import { dbMiddleware } from "./middlewares/dbMiddleware";
+import { ErrorHandler } from "./middlewares/errorHandler";
 
 declare global {
     namespace Express {
@@ -15,14 +17,14 @@ declare global {
 const app = express();
 app.use(express.json());
 
-let db_name = process.env.DB_SCHEMA!;
-let db_user = process.env.DB_USER!;
-let db_password = process.env.DB_PASSWORD!;
-let host = process.env.DB_HOST!;
-let port = process.env.DB_PORT!;
-
 app.use(async (req: Request, res: Response, next: NextFunction) => {
-    console.log("inseid", db_name, db_user, db_password, host, port);
+    // let db_name = process.env.DB_SCHEMA!;
+    let db_name = req.body.db_name;
+    let db_user = process.env.DB_USER!;
+    let db_password = process.env.DB_PASSWORD!;
+    let host = process.env.DB_HOST!;
+    let port = process.env.DB_PORT!;
+
     req.dbConfig = {
         name: "crm-db",
         data: {
@@ -39,7 +41,6 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
             },
         },
     };
-    console.log("exit");
     next();
 });
 
@@ -47,4 +48,5 @@ app.use(dbMiddleware);
 
 loadRoute();
 
+app.use(ErrorHandler);
 export { app };

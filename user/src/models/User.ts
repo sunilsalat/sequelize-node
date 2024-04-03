@@ -30,19 +30,22 @@ export const getTenantUserModel = (sequelize: any) => {
                 type: DataTypes.STRING,
                 unique: true,
             },
-            hobbies: {
-                type: DataTypes.ARRAY(DataTypes.STRING),
-            },
+            // hobbies: {
+            //     type: DataTypes.ARRAY(DataTypes.STRING),
+            //     allowNull: true,
+            // },
         },
         { sequelize }
     );
+
+    // Emp.sync({ alter: true });
 
     Emp.belongsTo(Address, {
         foreignKey: { name: "addressid" },
         as: "address",
     });
 
-    Address.hasOne(Emp);
+    // Address.hasOne(Emp);
 
     return Emp;
 };
