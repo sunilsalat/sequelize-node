@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { getTenantUserModel } from "../models/User";
+import { getTenantUserModel, getUserModel } from "../models/User";
 
 export const createUser = async (req: Request, res: Response) => {
     const { name, email, addressid, hobbies } = req.body;
-    const Emp = getTenantUserModel(req.sequelize);
+    const Emp = await getUserModel(req.dbConfig);
 
     const userObj = await Emp.create({
         name,

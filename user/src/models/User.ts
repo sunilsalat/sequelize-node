@@ -52,8 +52,8 @@ export const getTenantUserModel = (sequelize: any) => {
 
 export const getUserModel = async (dbConfig: any) => {
     const seqConn = await connect(dbConfig);
-    const User = await seqConn.models["User"];
-    return User;
+    const Emp = await seqConn.models["Emp"];
+    return Emp;
 };
 
 // export default Emp;
