@@ -1,5 +1,6 @@
 // src/models/User.ts
 import { DataTypes, Model } from "sequelize";
+import { connect, connections } from "../middlewares/dbMiddleware";
 
 interface AddressAttributes {
     landmark: string;
@@ -39,6 +40,13 @@ export const getTenantAddressModel = (sequelize: any) => {
         { sequelize }
     );
 
+    return Address;
+};
+
+export const getAddressModel = async (dbConfig: any) => {
+    const seqConn = await connect(dbConfig);
+    console.log(seqConn);
+    const Address = await seqConn.models["Address"];
     return Address;
 };
 

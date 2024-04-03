@@ -1,6 +1,7 @@
 // src/models/User.ts
 import { DataTypes, Model } from "sequelize";
 import { getTenantAddressModel } from "./Address";
+import { connect } from "../middlewares/dbMiddleware";
 
 interface UserAttributes {
     name: string;
@@ -38,16 +39,21 @@ export const getTenantUserModel = (sequelize: any) => {
         { sequelize }
     );
 
-    // Emp.sync({ alter: true });
+    Emp.sync({ alter: true });
 
     Emp.belongsTo(Address, {
         foreignKey: { name: "addressid" },
-        as: "address",
     });
 
-    // Address.hasOne(Emp);
+    Address.hasOne(Emp);
 
     return Emp;
+};
+
+export const getUserModel = async (dbConfig: any) => {
+    const seqConn = await connect(dbConfig);
+    const User = await seqConn.models["User"];
+    return User;
 };
 
 // export default Emp;

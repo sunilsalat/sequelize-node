@@ -5,6 +5,6 @@ const route = express.Router();
 
 route.post("/create", [], UserController.createUser);
 route.post("/update", [], UserController.updateUser);
-route.get("/all", [], UserController.getAllUsers);
+route.post("/all", [], UserController.getAllUsers);
 
 export default route;

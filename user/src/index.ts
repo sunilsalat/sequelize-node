@@ -1,7 +1,6 @@
 require("express-async-errors");
 import express, { Request, Response, NextFunction } from "express";
 import { loadRoute } from "./routes";
-import { dbMiddleware } from "./middlewares/dbMiddleware";
 import { ErrorHandler } from "./middlewares/errorHandler";
 
 declare global {
@@ -26,25 +25,20 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
     let port = process.env.DB_PORT!;
 
     req.dbConfig = {
-        name: "crm-db",
-        data: {
-            db_name,
-            db_user,
-            db_password,
-            config: {
-                host: host,
-                port: Number(port),
-                dialect: "postgres",
-                dialectOptions: {
-                    ssl: process.env.DB_SSL == "true",
-                },
+        db_name,
+        db_user,
+        db_password,
+        config: {
+            host: host,
+            port: Number(port),
+            dialect: "postgres",
+            dialectOptions: {
+                ssl: process.env.DB_SSL == "true",
             },
         },
     };
     next();
 });
-
-app.use(dbMiddleware);
 
 loadRoute();
 
