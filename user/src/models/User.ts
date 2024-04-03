@@ -1,39 +1,50 @@
 // src/models/User.ts
-import Sequelize, { Model } from "sequelize";
-import sequelize from "../config/database";
-import Address from "./UserAddress";
+import { DataTypes, Model } from "sequelize";
+import { getTenantAddressModel } from "./Address";
 
 interface UserAttributes {
     name: string;
     email: string;
+    hobbies?: [];
     addressid?: string;
     id?: number;
 }
 
-class Emp extends Model<UserAttributes> {}
+export const getTenantUserModel = (sequelize: any) => {
+    let Address = getTenantAddressModel(sequelize);
 
-Emp.init(
-    {
-        id: {
-            type: Sequelize.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-        },
-        name: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
-        email: {
-            type: Sequelize.STRING,
-            unique: true,
-        },
-    },
-    { sequelize }
-);
+    class Emp extends Model<UserAttributes> {}
 
-Emp.belongsTo(Address, {
-    foreignKey: { name: "addressid" },
-    as: "address",
-});
+    Emp.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            email: {
+                type: DataTypes.STRING,
+                unique: true,
+            },
+            hobbies: {
+                type: DataTypes.ARRAY(DataTypes.STRING),
+            },
+        },
+        { sequelize }
+    );
 
-export default Emp;
+    Emp.belongsTo(Address, {
+        foreignKey: { name: "addressid" },
+        as: "address",
+    });
+
+    Address.hasOne(Emp);
+
+    return Emp;
+};
+
+// export default Emp;

@@ -16,7 +16,7 @@ services:
         build:
             context: ./user
         environment:
-            DB_SCHEMA: crm # postgres create default database with POSTGRES_USER name , if not created any
+            DB_SCHEMA: crm # postgres create default database with POSTGRES_USER name, if not created any
             DB_USER: crm
             DB_PASSWORD: crm
             DB_HOST: postgres-db

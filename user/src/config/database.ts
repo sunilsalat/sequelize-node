@@ -7,28 +7,33 @@ let host = process.env.DB_HOST!;
 let port = process.env.DB_PORT!;
 
 console.log({ db_name, db_user, db_password, host, port });
+let sequelize: any;
 
-const sequelize = new Sequelize(db_name, db_user, db_password, {
-    host: host,
-    port: Number(port),
-    dialect: "postgres",
-    dialectOptions: {
-        ssl: process.env.DB_SSL == "true",
-    },
-});
-
-sequelize
-    .authenticate()
-    .then(() => {
-        console.log("Connection has been established successfully.");
-    })
-    .catch((error) => {
-        console.error("Unable to connect to the database:", error);
+if (db_name && db_user) {
+    sequelize = new Sequelize(db_name, db_user, db_password, {
+        host: host,
+        port: Number(port),
+        dialect: "postgres",
+        dialectOptions: {
+            ssl: process.env.DB_SSL == "true",
+        },
     });
 
-sequelize
-    .sync()
-    .then(() => console.log("Tables created or updated successfully!"))
-    .catch((error) => console.error("Error synchronizing tables:", error));
+    sequelize
+        .authenticate()
+        .then(() => {
+            console.log("Connection has been established successfully.");
+        })
+        .catch((error: any) => {
+            console.error("Unable to connect to the database:", error);
+        });
+
+    sequelize
+        .sync()
+        .then(() => console.log("Tables created or updated successfully!"))
+        .catch((error: any) =>
+            console.error("Error synchronizing tables:", error)
+        );
+}
 
 export default sequelize;

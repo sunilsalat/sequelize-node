@@ -1,18 +1,39 @@
 import { Request, Response } from "express";
-import Emp from "../models/User";
-import sequelize from "../config/database";
+import { getTenantUserModel } from "../models/User";
 
 export const createUser = async (req: Request, res: Response) => {
     const { name, email, addressid } = req.body;
+    const Emp = getTenantUserModel(req.sequelize);
+
     const userObj = await Emp.create({
         name,
         email,
         addressid,
     });
+
+    return res.status(200).json({ userObj });
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+    const { userId, name, email, addressid } = req.body;
+    const Emp = getTenantUserModel(req.sequelize);
+
+    const userObj = await Emp.update(
+        {
+            name,
+            email,
+            addressid,
+        },
+        { where: { id: userId } }
+    );
+
     return res.status(200).json({ userObj });
 };
 
 export const getAllUsers = async (req: Request, res: Response) => {
+    const Emp = getTenantUserModel(req.sequelize);
+
     const userObj = await Emp.findAll({});
+
     return res.status(200).json({ userObj });
 };
