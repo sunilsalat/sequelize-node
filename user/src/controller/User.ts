@@ -5,8 +5,8 @@ import { getAddressModel } from "../models/Address";
 export const createUser = async (req: Request, res: Response) => {
     const { firstName, lastName, password, email, addressid, hobbies } =
         req.body;
-    const Emp = await getUserModel(req.dbConfig);
-    const userObj = await Emp.create({
+    const User = await getUserModel(req.dbConfig);
+    const userObj = await User.create({
         firstName,
         lastName,
         password,
@@ -19,8 +19,8 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
     const { userId, name, email, addressid } = req.body;
-    const Emp = await getUserModel(req.dbConfig);
-    const userObj = await Emp.update(
+    const User = await getUserModel(req.dbConfig);
+    const userObj = await User.update(
         {
             name,
             email,
@@ -33,15 +33,20 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
     const { userId } = req.body;
-    const Emp = await getUserModel(req.dbConfig);
-    const userObj = await Emp.destroy({ where: { id: userId } });
+    const User = await getUserModel(req.dbConfig);
+    const userObj = await User.destroy({ where: { id: userId } });
     return res.status(200).json({ data: "", msg: "User deleted" });
+};
+
+export const findUser = async (req: Request, res: Response) => {
+    const User = await getUserModel(req.dbConfig);
 };
 
 export const getAllUsers = async (req: Request, res: Response) => {
     const Address = await getAddressModel(req.dbConfig);
-    const Emp = await getUserModel(req.dbConfig);
-    const userObj = await Emp.findAll({
+    const User = await getUserModel(req.dbConfig);
+    const userObj = await User.findAll({
+        attributes: ["fullName", "email"],
         include: [
             {
                 model: Address,

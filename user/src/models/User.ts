@@ -17,11 +17,11 @@ interface UserAttributes {
 export const initUserModel = (sequelize: any) => {
     let Address = initAddressModel(sequelize);
 
-    class Emp extends Model<UserAttributes> {
+    class User extends Model<UserAttributes> {
         [x: string]: any;
     }
 
-    Emp.init(
+    User.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -93,8 +93,8 @@ export const initUserModel = (sequelize: any) => {
         }
     );
 
-    Address.hasOne(Emp, { foreignKey: "addressId" }); // Define the association correctly
-    Emp.belongsTo(Address, {
+    Address.hasOne(User, { foreignKey: "addressId" }); // Define the association correctly
+    User.belongsTo(Address, {
         foreignKey: {
             name: "addressId",
             allowNull: false, // Ensure the foreign key is not nullable
@@ -103,13 +103,13 @@ export const initUserModel = (sequelize: any) => {
         onUpdate: "CASCADE", // Define ON UPDATE behavior (optional)
     });
 
-    return Emp;
+    return User;
 };
 
 export const getUserModel = async (dbConfig: any) => {
     const seqConn = await connect(dbConfig);
-    const Emp = await seqConn.models["Emp"];
-    return Emp;
+    const User = await seqConn.models["User"];
+    return User;
 };
 
 function hash(value: string): string {
