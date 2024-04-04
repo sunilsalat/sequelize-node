@@ -104,13 +104,6 @@ export const initUserModel = (sequelize: any) => {
             name: "userId",
         },
     });
-
-    Order.belongsTo(User, {
-        foreignKey: {
-            name: "userId",
-            allowNull: false,
-        },
-    });
 };
 
 export const getUserModel = async (dbConfig: any) => {

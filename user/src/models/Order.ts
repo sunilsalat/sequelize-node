@@ -10,6 +10,8 @@ interface OrderAttributes {
 class Order extends Model<OrderAttributes> {}
 
 export const initOrderModel = (sequelize: any) => {
+    const { User } = sequelize.models;
+
     Order.init(
         {
             id: {
@@ -28,6 +30,13 @@ export const initOrderModel = (sequelize: any) => {
         },
         { sequelize }
     );
+
+    Order.belongsTo(User, {
+        foreignKey: {
+            name: "userId",
+            allowNull: false,
+        },
+    });
 };
 
 export const getOrderModel = async (dbConfig: any) => {
