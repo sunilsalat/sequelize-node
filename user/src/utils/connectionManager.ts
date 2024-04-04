@@ -21,7 +21,7 @@ export const connect = async (dbConfig: any) => {
             sequelize = new Sequelize(db_name, db_user, db_password, config);
             await sequelize.authenticate();
             loadModels(sequelize);
-            await sequelize.sync({ force: true });
+            await sequelize.sync({ alter: true });
             connections[db_name] = sequelize;
         }
 

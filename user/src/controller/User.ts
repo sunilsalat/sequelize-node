@@ -35,13 +35,16 @@ export const deleteUser = async (req: Request, res: Response) => {
     const { userId } = req.body;
     const User = await getUserModel(req.dbConfig);
     const userObj = await User.destroy({ where: { id: userId } });
-    return res.status(200).json({ data: "", msg: "User deleted" });
+    return res.status(200).json({ data: userObj, msg: "User deleted" });
 };
 
 export const findUser = async (req: Request, res: Response) => {
     const { userId } = req.body;
     const User = await getUserModel(req.dbConfig);
-    const userObj = await User.findOne({ where: { id: userId } });
+    const userObj = await User.findOne({
+        attributes: { exclude: ["password", "createdAt", "updatedAt"] },
+        where: { id: userId },
+    });
     return res.status(200).json({ data: userObj, msg: "" });
 };
 
@@ -49,7 +52,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
     const Address = await getAddressModel(req.dbConfig);
     const User = await getUserModel(req.dbConfig);
     const userObj = await User.findAll({
-        attributes: ["fullName", "email"],
+        attributes: ["id", "fullName", "email"],
         include: [
             {
                 model: Address,
