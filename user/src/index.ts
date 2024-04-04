@@ -3,16 +3,6 @@ import express, { Request, Response, NextFunction } from "express";
 import { loadRoute } from "./routes";
 import { ErrorHandler } from "./middlewares/errorHandler";
 
-declare global {
-    namespace Express {
-        interface Request {
-            sequelize?: any;
-            userInfo?: any;
-            dbConfig?: any;
-        }
-    }
-}
-
 const app = express();
 app.use(express.json());
 

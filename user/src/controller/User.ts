@@ -1,24 +1,25 @@
 import { Request, Response } from "express";
-import { getTenantUserModel, getUserModel } from "../models/User";
+import { getUserModel } from "../models/User";
+import { getAddressModel } from "../models/Address";
 
 export const createUser = async (req: Request, res: Response) => {
-    const { name, email, addressid, hobbies } = req.body;
+    const { firstName, lastName, password, email, addressid, hobbies } =
+        req.body;
     const Emp = await getUserModel(req.dbConfig);
-
     const userObj = await Emp.create({
-        name,
+        firstName,
+        lastName,
+        password,
         email,
-        addressid,
+        addressId: addressid,
         hobbies,
     });
-
     return res.status(200).json({ userObj });
 };
 
 export const updateUser = async (req: Request, res: Response) => {
     const { userId, name, email, addressid } = req.body;
-    const Emp = getTenantUserModel(req.sequelize);
-
+    const Emp = await getUserModel(req.dbConfig);
     const userObj = await Emp.update(
         {
             name,
@@ -27,14 +28,26 @@ export const updateUser = async (req: Request, res: Response) => {
         },
         { where: { id: userId } }
     );
-
     return res.status(200).json({ userObj });
 };
 
+export const deleteUser = async (req: Request, res: Response) => {
+    const { userId } = req.body;
+    const Emp = await getUserModel(req.dbConfig);
+    const userObj = await Emp.destroy({ where: { id: userId } });
+    return res.status(200).json({ data: "", msg: "User deleted" });
+};
+
 export const getAllUsers = async (req: Request, res: Response) => {
-    const Emp = getTenantUserModel(req.sequelize);
-
-    const userObj = await Emp.findAll({});
-
+    const Address = await getAddressModel(req.dbConfig);
+    const Emp = await getUserModel(req.dbConfig);
+    const userObj = await Emp.findAll({
+        include: [
+            {
+                model: Address,
+                attributes: ["landmark", "city", "state", "country"],
+            },
+        ],
+    });
     return res.status(200).json({ userObj });
 };
