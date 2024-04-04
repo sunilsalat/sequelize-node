@@ -115,4 +115,3 @@ export const getUserModel = async (dbConfig: any) => {
 function hash(value: string): string {
     return value;
 }
-// export default Emp;
