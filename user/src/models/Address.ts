@@ -1,6 +1,6 @@
 // src/models/User.ts
 import { DataTypes, Model } from "sequelize";
-import { connect, connections } from "../utils/connectionManager";
+import { connect } from "../utils/connectionManager";
 
 interface AddressAttributes {
     landmark: string;
@@ -39,8 +39,6 @@ export const initAddressModel = (sequelize: any) => {
         },
         { sequelize }
     );
-
-    return Address;
 };
 
 export const getAddressModel = async (dbConfig: any) => {
@@ -48,5 +46,3 @@ export const getAddressModel = async (dbConfig: any) => {
     const Address = await seqConn.models["Address"];
     return Address;
 };
-
-// export default Address;

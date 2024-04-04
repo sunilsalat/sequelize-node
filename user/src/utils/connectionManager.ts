@@ -20,8 +20,8 @@ export const connect = async (dbConfig: any) => {
         if (!connections[db_name]) {
             sequelize = new Sequelize(db_name, db_user, db_password, config);
             await sequelize.authenticate();
-            loadModels(sequelize);
-            await sequelize.sync({ alter: true });
+            await loadModels(sequelize);
+            await sequelize.sync({ force: true });
             connections[db_name] = sequelize;
         }
 

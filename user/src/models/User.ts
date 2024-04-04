@@ -1,6 +1,5 @@
 // src/models/User.ts
 import { DataTypes, Model } from "sequelize";
-import { initAddressModel } from "./Address";
 import { connect } from "../utils/connectionManager";
 
 interface UserAttributes {
@@ -15,8 +14,7 @@ interface UserAttributes {
 }
 
 export const initUserModel = (sequelize: any) => {
-    let Address = initAddressModel(sequelize);
-
+    const { Address, Order } = sequelize.models;
     class User extends Model<UserAttributes> {
         [x: string]: any;
     }
@@ -68,9 +66,6 @@ export const initUserModel = (sequelize: any) => {
                     this.setDataValue("password", hash(value));
                 },
             },
-            addressId: {
-                type: DataTypes.INTEGER,
-            },
             hobbies: {
                 type: DataTypes.ARRAY(DataTypes.STRING),
                 allowNull: true,
@@ -93,17 +88,29 @@ export const initUserModel = (sequelize: any) => {
         }
     );
 
-    Address.hasOne(User, { foreignKey: "addressId" }); // Define the association correctly
+    Address.hasOne(User, { foreignKey: "addressId" });
+
     User.belongsTo(Address, {
         foreignKey: {
             name: "addressId",
-            allowNull: false, // Ensure the foreign key is not nullable
+            allowNull: false,
         },
-        onDelete: "CASCADE", // Define ON DELETE behavior (optional)
-        onUpdate: "CASCADE", // Define ON UPDATE behavior (optional)
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
     });
 
-    return User;
+    User.hasMany(Order, {
+        foreignKey: {
+            name: "userId",
+        },
+    });
+
+    Order.belongsTo(User, {
+        foreignKey: {
+            name: "userId",
+            allowNull: false,
+        },
+    });
 };
 
 export const getUserModel = async (dbConfig: any) => {

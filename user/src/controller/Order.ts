@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { getUserModel } from "../models/User";
 import { getAddressModel } from "../models/Address";
 
-export const createUser = async (req: Request, res: Response) => {
+export const createOrder = async (req: Request, res: Response) => {
     const { firstName, lastName, password, email, addressid, hobbies } =
         req.body;
     const User = await getUserModel(req.dbConfig);
@@ -17,29 +17,14 @@ export const createUser = async (req: Request, res: Response) => {
     return res.status(200).json({ userObj });
 };
 
-export const updateUser = async (req: Request, res: Response) => {
-    const { userId, firstName, lastName, email, addressid } = req.body;
-    const User = await getUserModel(req.dbConfig);
-    const userObj = await User.update(
-        {
-            firstName,
-            lastName,
-            email,
-            addressid,
-        },
-        { where: { id: userId } }
-    );
-    return res.status(200).json({ userObj });
-};
-
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteOrder = async (req: Request, res: Response) => {
     const { userId } = req.body;
     const User = await getUserModel(req.dbConfig);
     const userObj = await User.destroy({ where: { id: userId } });
     return res.status(200).json({ data: userObj, msg: "User deleted" });
 };
 
-export const findUser = async (req: Request, res: Response) => {
+export const findOrder = async (req: Request, res: Response) => {
     const { userId } = req.body;
     const User = await getUserModel(req.dbConfig);
     const userObj = await User.findOne({
@@ -49,10 +34,9 @@ export const findUser = async (req: Request, res: Response) => {
     return res.status(200).json({ data: userObj, msg: "" });
 };
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllOrder = async (req: Request, res: Response) => {
     const Address = await getAddressModel(req.dbConfig);
     const User = await getUserModel(req.dbConfig);
-
     const userObj = await User.findAll({
         attributes: ["id", "fullName", "email", "firstName", "lastName"],
         include: [
