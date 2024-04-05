@@ -1,6 +1,8 @@
 // src/models/User.ts
 import { DataTypes, Model } from "sequelize";
 import { connect } from "../utils/connectionManager";
+import { initUserModel } from "./User";
+import { initOrderModel } from "./Order";
 
 interface AddressAttributes {
     landmark: string;
@@ -39,6 +41,11 @@ export const initAddressModel = (sequelize: any) => {
         },
         { sequelize }
     );
+};
+
+export const loadAddressAssociation = (sequelize: any) => {
+    const { Address, User } = sequelize.models;
+    Address.hasOne(User, { foreignKey: "addressId" });
 };
 
 export const getAddressModel = async (dbConfig: any) => {

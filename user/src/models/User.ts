@@ -14,7 +14,6 @@ interface UserAttributes {
 }
 
 export const initUserModel = (sequelize: any) => {
-    const { Address, Order } = sequelize.models;
     class User extends Model<UserAttributes> {
         [x: string]: any;
     }
@@ -87,8 +86,10 @@ export const initUserModel = (sequelize: any) => {
             },
         }
     );
+};
 
-    Address.hasOne(User, { foreignKey: "addressId" });
+export const loadUserAssociation = (sequelize: any) => {
+    const { Address, Order, User } = sequelize.models;
 
     User.belongsTo(Address, {
         foreignKey: {
@@ -99,11 +100,7 @@ export const initUserModel = (sequelize: any) => {
         onUpdate: "CASCADE",
     });
 
-    User.hasMany(Order, {
-        foreignKey: {
-            name: "userId",
-        },
-    });
+    User.hasMany(Order, { as: "orders", foreignKey: "userId" });
 };
 
 export const getUserModel = async (dbConfig: any) => {
