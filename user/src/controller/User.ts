@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { getUserModel } from "../models/User";
 import { getAddressModel } from "../models/Address";
+import { getOrderModel } from "../models/Order";
 
 export const createUser = async (req: Request, res: Response) => {
     const { firstName, lastName, password, email, addressid, hobbies } =
@@ -42,8 +43,10 @@ export const deleteUser = async (req: Request, res: Response) => {
 export const findUser = async (req: Request, res: Response) => {
     const { userId } = req.body;
     const User = await getUserModel(req.dbConfig);
+    const Order = await getOrderModel(req.dbConfig);
     const userObj = await User.findOne({
         attributes: { exclude: ["password", "createdAt", "updatedAt"] },
+        include: "orders",
         where: { id: userId },
     });
     return res.status(200).json({ data: userObj, msg: "" });

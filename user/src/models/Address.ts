@@ -1,8 +1,6 @@
 // src/models/User.ts
 import { DataTypes, Model } from "sequelize";
 import { connect } from "../utils/connectionManager";
-import { initUserModel } from "./User";
-import { initOrderModel } from "./Order";
 
 interface AddressAttributes {
     landmark: string;
